@@ -1,0 +1,30 @@
+<!-- camera.html (for the person sharing their camera) -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>shaqo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { text-align: center; font-family: sans-serif; }
+    video { width: 90%; max-width: 500px; margin-top: 20px; border: 2px solid #ccc; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h2>waan kaxunnahay</h2>
+  <video id="video" autoplay playsinline muted></video>
+
+  <script>
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        document.getElementById('video').srcObject = stream;
+        // TO DO: Send stream to viewer via WebRTC or a media server
+      } catch (err) {
+        alert('Camera access denied or not supported.');
+      }
+    }
+
+    startCamera();
+  </script>
+</body>
+</html>
