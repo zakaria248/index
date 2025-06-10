@@ -1,30 +1,40 @@
-<!-- camera.html (for the person sharing their camera) -->
+<!-- index.html (your viewer.html) -->
 <!DOCTYPE html>
 <html>
 <head>
-  <title>shaqo</title>
+  <title>Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { text-align: center; font-family: sans-serif; }
-    video { width: 90%; max-width: 500px; margin-top: 20px; border: 2px solid #ccc; border-radius: 8px; }
+    body { text-align: center; font-family: sans-serif; margin-top: 30px; }
+    video { width: 90%; max-width: 600px; border: 2px solid #ccc; border-radius: 8px; }
+    input { padding: 10px; width: 250px; font-size: 16px; }
+    button { padding: 10px 15px; font-size: 16px; margin-left: 10px; }
   </style>
 </head>
 <body>
-  <h2>waan kaxunnahay</h2>
-  <video id="video" autoplay playsinline muted></video>
+  <h2>Enter Camera Stream ID</h2>
+  <input type="text" id="peer-id" placeholder="Enter Peer ID">
+  <button onclick="connectToCamera()">Connect</button>
+  <br><br>
+  <video id="remoteVideo" autoplay playsinline></video>
 
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.4.7/dist/peerjs.min.js"></script>
   <script>
-    async function startCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-        document.getElementById('video').srcObject = stream;
-        // TO DO: Send stream to viewer via WebRTC or a media server
-      } catch (err) {
-        alert('Camera access denied or not supported.');
-      }
-    }
+    const peer = new Peer();
 
-    startCamera();
+    function connectToCamera() {
+      const id = document.getElementById('peer-id').value;
+      const call = peer.call(id, null);
+
+      call.on('stream', (remoteStream) => {
+        const remoteVideo = document.getElementById('remoteVideo');
+        remoteVideo.srcObject = remoteStream;
+      });
+
+      call.on('error', (err) => {
+        alert('Error connecting to camera: ' + err);
+      });
+    }
   </script>
 </body>
 </html>
